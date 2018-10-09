@@ -56,12 +56,7 @@ data and then storing that data into the telemetry database.
     
     Installing the Kubos SDK <../installation-docs/sdk-installing>
     Creating Your First KubOS Project <first-project>
-    
-.. todo::
-
     Creating Your First Mission Application <first-mission-app>
-    Communicating with Hardware Services <querying-hardware>
-    Storing Telemetry <storing-telemetry>
     
 System Interaction Tutorials
 ----------------------------
@@ -75,9 +70,10 @@ There is no coding required for these actions, however some scripting may used f
     
     Registering an Application <app-register>
     Transferring Files <file-transfer>
+    Querying the System <querying-telemetry>
     
 .. todo::
-    Querying the System <querying-telemetry>
+    
     Creating a Shell Connection <shell>
     Communicating Over a Radio <comms>
     
