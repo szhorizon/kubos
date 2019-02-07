@@ -1,4 +1,4 @@
-# kubos/kubos-dev:0.1.8
+# kubos/kubos-dev:0.1.9
 
 FROM phusion/baseimage:0.9.22
 
@@ -63,4 +63,4 @@ RUN pip install sphinx-rtd-theme==0.2.4
 RUN pip install sphinxcontrib-plantuml sphinxcontrib-versioning
 RUN pip install sphinx-jsondomain
 
-ENV PATH "$PATH:/usr/bin/iobc_toolchain/usr/bin:/usr/bin/bbb_toolchain/usr/bin"
+ENV PATH "$PATH:/usr/lib/x86_64-linux-gnu:/usr/bin/iobc_toolchain/usr/bin:/usr/bin/bbb_toolchain/usr/bin"
