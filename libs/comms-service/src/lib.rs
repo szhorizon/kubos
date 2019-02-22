@@ -16,9 +16,6 @@
 // Contributed by: William Greer (wgreer184@gmail.com) and Sam Justice (sam.justice1@gmail.com)
 //
 
-#![deny(missing_docs)]
-#![deny(warnings)]
-
 //!
 //! This library allows users to define and start communication services within their hardware services.
 //!
@@ -75,9 +72,9 @@
 
 #[macro_use]
 extern crate juniper;
-
 #[macro_use]
 extern crate log;
+extern crate reqwest;
 
 mod config;
 mod errors;

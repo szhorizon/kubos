@@ -16,6 +16,9 @@
 // Contributed by: William Greer (wgreer184@gmail.com) and Sam Justice (sam.justice1@gmail.com)
 //
 
+#![deny(warnings)]
+#![deny(missing_docs)]
+
 use failure::{Error, Fail};
 
 /// This enum defines all errors that can occur within the `comms-service`.

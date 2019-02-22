@@ -29,7 +29,7 @@ use std::ops::Range;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::time::Duration;
+// use std::time::Duration;
 
 // UDP header length.
 const HEADER_LEN: usize = 8;
@@ -293,35 +293,49 @@ fn socket_manager(ip: Ipv4Addr, port: &mut u16, min: u16, max: u16) -> Option<Ud
 // The thread then writes the response to the gateway.
 #[allow(clippy::too_many_arguments)]
 fn handle_message<T: Clone>(
-    socket: &UdpSocket,
+    _socket: &UdpSocket,
     data: &Arc<Mutex<CommsTelemetry>>,
     write_conn: T,
     write: &Arc<WriteFn<T>>,
     message: &UdpPacket,
-    timeout: u64,
+    _timeout: u64,
     sat_ip: Ipv4Addr,
     ground_ip: Ipv4Addr,
 ) {
-    let mut buf = [0; MAX_SIZE];
+    let mut _buf = [0; MAX_SIZE];
 
-    // Set receive timeout for the socket.
-    match socket.set_read_timeout(Some(Duration::from_millis(timeout))) {
-        Ok(_) => (),
-        Err(e) => return log_error(&data, e.to_string()).unwrap(),
-    };
+    // UDP code for sending GraphQL and receiving response
+    // // Set receive timeout for the socket.
+    // match socket.set_read_timeout(Some(Duration::from_millis(timeout))) {
+    //     Ok(_) => (),
+    //     Err(e) => return log_error(&data, e.to_string()).unwrap(),
+    // };
 
-    // Send message to the intended service.
-    match socket.send_to(message.payload(), (sat_ip, message.get_destination())) {
-        Ok(_) => (),
-        Err(e) => return log_error(&data, e.to_string()).unwrap(),
-    };
-    info!("UDP Packet sent to port {}", message.get_destination());
+    // // Send message to the intended service.
+    // match socket.send_to(message.payload(), (sat_ip, message.get_destination())) {
+    //     Ok(_) => (),
+    //     Err(e) => return log_error(&data, e.to_string()).unwrap(),
+    // };
+    // info!("UDP Packet sent to port {}", message.get_destination());
 
-    // Receive response back from the service.
-    let (size, _) = match socket.recv_from(&mut buf) {
-        Ok(tuple) => tuple,
-        Err(e) => return log_error(&data, e.to_string()).unwrap(),
-    };
+    // // Receive response back from the service.
+    // let (size, _) = match socket.recv_from(&mut buf) {
+    //     Ok(tuple) => tuple,
+    //     Err(e) => return log_error(&data, e.to_string()).unwrap(),
+    // };
+
+    let payload = message.payload().to_vec();
+
+    let client = reqwest::Client::new();
+    let mut res = client
+        .post(&format!("http://{}:{}", sat_ip, message.get_destination()))
+        .body(payload)
+        .send()
+        .unwrap();
+
+    let size = res.content_length().unwrap() as usize;
+    let buf = res.text().unwrap();
+    let buf = buf.as_bytes();
 
     // Take received message and wrap it in a UDP packet.
     let packet = match build_packet(
@@ -345,7 +359,7 @@ fn handle_message<T: Clone>(
         Err(e) => {
             log_telemetry(&data, &TelemType::DownFailed).unwrap();
             log_error(&data, e.to_string()).unwrap();
-            error!("UDP packet failed to downlink");
+            error!("UDP Packet failed to downlink: {:?}", e.to_string());
         }
     };
 }
@@ -403,7 +417,7 @@ fn downlink_endpoint<T: Clone>(
             Err(e) => {
                 log_telemetry(&data, &TelemType::DownFailed).unwrap();
                 log_error(&data, e.to_string()).unwrap();
-                error!("UDP Packet failed to downlink");
+                error!("UDP Packet failed to downlink: {:?}", e.to_string());
             }
         };
     }

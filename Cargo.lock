@@ -268,6 +268,7 @@ dependencies = [
  "kubos-system 0.1.0",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "pnet 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "reqwest 0.9.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.87 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.87 (registry+https://github.com/rust-lang/crates.io-index)",
  "toml 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
